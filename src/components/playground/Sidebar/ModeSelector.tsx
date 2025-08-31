@@ -9,21 +9,22 @@ import {
 import { usePlaygroundStore } from '@/store'
 import useChatActions from '@/hooks/useChatActions'
 
-export function ModeSelector() {
+export default function ModeSelector() {
   const {
     mode,
     setMode,
     teams,
     agents,
-    setMessages,
+    setAgentId,
+    setTeamId,
+    setSelectedTeamId,
     setSelectedModel,
     setHasStorage,
-    setSelectedTeamId
+    setMessages,
+    setSessionId
   } = usePlaygroundStore()
+  
   const { clearChat } = useChatActions()
-  const [, setAgentId] = useQueryState('agent')
-  const [, setTeamId] = useQueryState('team')
-  const [, setSessionId] = useQueryState('session')
 
   const hasTeams = teams.length > 0
   const hasAgents = agents.length > 0
@@ -34,12 +35,13 @@ export function ModeSelector() {
 
     setMode(newMode)
 
-    setSelectedAgentId(null)
+    setAgentId(null)
+    setTeamId(null)
     setSelectedTeamId(null)
     setSelectedModel('')
     setHasStorage(false)
     setMessages([])
-    setSelectedSessionId(null)
+    setSessionId(null)
     clearChat()
   }
 

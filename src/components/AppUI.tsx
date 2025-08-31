@@ -448,24 +448,24 @@ export default function AppUI() {
   const handleSubmit = async () => {
     if (!inputMessage.trim() || isStreaming) return
 
-    const userMessage: ChatMessage = {
-      role: 'user',
-      content: inputMessage,
-      created_at: Math.floor(Date.now() / 1000)
-    }
-
-    setMessages(prev => [...prev, userMessage])
+    const messageContent = inputMessage.trim()
     setInputMessage('')
     setIsStreaming(true)
 
-    // Add thinking state
+    const userMessage: ChatMessage = {
+      role: 'user',
+      content: messageContent,
+      created_at: Math.floor(Date.now() / 1000)
+    }
+
     const thinkingMessage: ChatMessage = {
       role: 'agent',
       content: '',
       created_at: Math.floor(Date.now() / 1000) + 1
     }
-    setMessages(prev => [...prev, thinkingMessage])
-
+    
+    // Add both messages at once to reduce re-renders
+    setMessages(prev => [...prev, userMessage, thinkingMessage])
     // Simulate response after delay
     setTimeout(() => {
       const responses = [
@@ -501,7 +501,7 @@ export default function AppUI() {
       if (!selectedSessionId && hasStorage) {
         const newSession = {
           session_id: `session-${Date.now()}`,
-          title: inputMessage.slice(0, 50),
+          title: messageContent.slice(0, 50),
           created_at: Math.floor(Date.now() / 1000)
         }
         setSessions(prev => [newSession, ...prev])

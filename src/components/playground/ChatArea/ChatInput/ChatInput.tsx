@@ -8,9 +8,9 @@ import Icon from '@/components/ui/icon'
 
 const ChatInput = () => {
   const [inputMessage, setInputMessage] = useState('')
-  const { isEntitySelected, isStreaming } = usePlaygroundStore()
+  const { selectedModel, isStreaming } = usePlaygroundStore()
   const { handleStreamResponse } = useAIChatStreamHandler()
-  const chatInputRef = useState(null)
+  const chatInputRef = useRef<HTMLTextAreaElement>(null)
 
   const handleSubmit = async () => {
     if (!inputMessage.trim()) return
@@ -47,13 +47,13 @@ const ChatInput = () => {
           }
         }}
         className="w-full border border-accent bg-primaryAccent px-4 text-sm text-primary focus:border-accent"
-        disabled={!isEntitySelected}
+        disabled={!selectedModel}
         ref={chatInputRef}
       />
       <Button
         onClick={handleSubmit}
         disabled={
-          !isEntitySelected || !inputMessage.trim() || isStreaming
+          !selectedModel || !inputMessage.trim() || isStreaming
         }
         size="icon"
         className="rounded-xl bg-primary p-5 text-primaryAccent"

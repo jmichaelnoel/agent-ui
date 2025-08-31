@@ -13,14 +13,10 @@ import Icon from '@/components/ui/icon'
 import { getProviderIcon } from '@/lib/modelProvider'
 import { truncateText, cn } from '@/lib/utils'
 import { Skeleton } from '@/components/ui/skeleton'
-import MarkdownRenderer from '@/components/ui/typography/MarkdownRenderer'
-import { StickToBottom } from 'use-stick-to-bottom'
 import { toast } from 'sonner'
-import Videos from '@/components/playground/ChatArea/Messages/Multimedia/Videos'
-import Images from '@/components/playground/ChatArea/Messages/Multimedia/Images'
-import Audios from '@/components/playground/ChatArea/Messages/Multimedia/Audios'
 import Tooltip from '@/components/ui/tooltip'
 import DeleteSessionModal from '@/components/playground/Sidebar/Sessions/DeleteSessionModal'
+import { ChatArea } from '@/components/playground/ChatArea'</parameter>
 
 // Mock Data
 const MOCK_AGENTS = [
@@ -72,178 +68,6 @@ const MOCK_MESSAGES = [
 ]
 
 type Mode = 'agent' | 'team'
-
-interface ChatMessage {
-  role: 'user' | 'agent'
-  content: string
-  created_at: number
-  tool_calls?: Array<{
-    role: 'tool'
-    content: string
-    tool_call_id: string
-    tool_name: string
-    tool_args: Record<string, any>
-    tool_call_error: boolean
-    metrics: { time: number }
-    created_at: number
-  }>
-  extra_data?: {
-    reasoning_steps?: Array<{
-      title: string
-      result: string
-      reasoning: string
-    }>
-  }
-  streamingError?: boolean
-}
-
-// Thinking Loader Component
-const AgentThinkingLoader = () => (
-  <div className="flex items-center justify-center gap-1">
-    <div className="size-2 animate-bounce rounded-full bg-primary/20 [animation-delay:-0.3s] [animation-duration:0.70s]" />
-    <div className="size-2 animate-bounce rounded-full bg-primary/20 [animation-delay:-0.10s] [animation-duration:0.70s]" />
-    <div className="size-2 animate-bounce rounded-full bg-primary/20 [animation-duration:0.70s]" />
-  </div>
-)
-
-// Tool Component
-const ToolComponent = ({ toolCall }: { toolCall: any }) => (
-  <div className="cursor-default rounded-full bg-accent px-2 py-1.5 text-xs">
-    <p className="font-dmmono uppercase text-primary/80">{toolCall.tool_name}</p>
-  </div>
-)
-
-// Reasoning Component
-const Reasoning = ({ index, stepTitle }: { index: number; stepTitle: string }) => (
-  <div className="flex items-center gap-2 text-secondary">
-    <div className="flex h-[20px] items-center rounded-md bg-background-secondary p-2">
-      <p className="text-xs">STEP {index + 1}</p>
-    </div>
-    <p className="text-xs">{stepTitle}</p>
-  </div>
-)
-
-// Message Components
-const UserMessage = ({ message }: { message: ChatMessage }) => (
-  <div className="flex items-start pt-4 text-start max-md:break-words">
-    <div className="flex flex-row gap-x-3">
-      <p className="flex items-center gap-x-2 text-sm font-medium text-muted">
-        <Icon type="user" size="sm" />
-      </p>
-      <div className="text-md rounded-lg py-1 font-geist text-secondary">
-        {message.content}
-      </div>
-    </div>
-  </div>
-)
-
-const AgentMessage = ({ message }: { message: ChatMessage }) => {
-  let messageContent
-  
-  if (message.streamingError) {
-    messageContent = (
-      <p className="text-destructive">
-        Oops! Something went wrong while streaming. Please try again.
-      </p>
-    )
-  } else if (message.content) {
-    messageContent = (
-      <div className="flex w-full flex-col gap-4">
-        <MarkdownRenderer>{message.content}</MarkdownRenderer>
-      </div>
-    )
-  } else {
-    messageContent = (
-      <div className="mt-2">
-        <AgentThinkingLoader />
-      </div>
-    )
-  }
-
-  return (
-    <div className="flex flex-row items-start gap-4 font-geist">
-      <div className="flex-shrink-0">
-        <Icon type="agent" size="sm" />
-      </div>
-      {messageContent}
-    </div>
-  )
-}
-
-const AgentMessageWrapper = ({ message }: { message: ChatMessage }) => {
-  return (
-    <div className="flex flex-col gap-y-9">
-      {message.extra_data?.reasoning_steps && message.extra_data.reasoning_steps.length > 0 && (
-        <div className="flex items-start gap-4">
-          <Tooltip
-            delayDuration={0}
-            content={<p className="text-accent">Reasoning</p>}
-            side="top"
-          >
-            <Icon type="reasoning" size="sm" />
-          </Tooltip>
-          <div className="flex flex-col gap-3">
-            <p className="text-xs uppercase">Reasoning</p>
-            <div className="flex flex-col items-start justify-center gap-2">
-              {message.extra_data.reasoning_steps.map((step, index) => (
-                <Reasoning
-                  key={`${step.title}-${index}`}
-                  stepTitle={step.title}
-                  index={index}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-      {message.tool_calls && message.tool_calls.length > 0 && (
-        <div className="flex items-start gap-3">
-          <Tooltip
-            delayDuration={0}
-            content={<p className="text-accent">Tool Calls</p>}
-            side="top"
-          >
-            <Icon
-              type="hammer"
-              className="rounded-lg bg-background-secondary p-1"
-              size="sm"
-              color="secondary"
-            />
-          </Tooltip>
-          <div className="flex flex-wrap gap-2">
-            {message.tool_calls.map((toolCall, index) => (
-              <ToolComponent key={`${toolCall.tool_call_id}-${index}`} toolCall={toolCall} />
-            ))}
-          </div>
-        </div>
-      )}
-      <AgentMessage message={message} />
-    </div>
-  )
-}
-
-// Blank State Component
-const ChatBlankState = () => (
-  <section className="flex flex-col items-center text-center font-geist" aria-label="Welcome message">
-    <div className="flex max-w-3xl flex-col gap-y-8">
-      <motion.h1
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.3 }}
-        className="text-3xl font-[600] tracking-tight"
-      >
-        <div className="flex items-center justify-center gap-x-2 whitespace-nowrap font-medium">
-          <span className="flex items-center font-[600]">Welcome to</span>
-          <span className="inline-flex translate-y-[10px] scale-125 items-center transition-transform duration-200 hover:rotate-6">
-            <Icon type="agno-tag" size="default" />
-          </span>
-          <span className="flex items-center font-[600]">Agent UI</span>
-        </div>
-        <p>Start a conversation with your AI agent</p>
-      </motion.h1>
-    </div>
-  </section>
-)
 
 // Session Item Component
 const SessionItem = ({ 
@@ -317,31 +141,6 @@ const SessionBlankState = ({ hasStorage }: { hasStorage: boolean }) => (
   </div>
 )
 
-// Scroll to Bottom Component
-const ScrollToBottom = ({ isAtBottom, scrollToBottom }: { isAtBottom: boolean; scrollToBottom: () => void }) => (
-  <AnimatePresence>
-    {!isAtBottom && (
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: 20 }}
-        transition={{ duration: 0.3, ease: 'easeInOut' }}
-        className="absolute bottom-4 left-1/2 -translate-x-1/2"
-      >
-        <Button
-          onClick={scrollToBottom}
-          type="button"
-          size="icon"
-          variant="secondary"
-          className="border border-border bg-background text-primary shadow-md transition-shadow duration-300 hover:bg-background-secondary"
-        >
-          <Icon type="arrow-down" size="xs" />
-        </Button>
-      </motion.div>
-    )}
-  </AnimatePresence>
-)
-
 export default function AppUI() {
   // Local state management
   const [isCollapsed, setIsCollapsed] = useState(false)
@@ -363,11 +162,7 @@ export default function AppUI() {
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null)
   const [isSessionsLoading] = useState(false)
   
-  const [messages, setMessages] = useState<ChatMessage[]>([])
-  const [inputMessage, setInputMessage] = useState('')
-  const [isStreaming, setIsStreaming] = useState(false)
-  
-  const chatInputRef = useRef<HTMLTextAreaElement>(null)
+  const [messages, setMessages] = useState<any[]>([])
 
   const currentEntities = mode === 'team' ? MOCK_TEAMS : MOCK_AGENTS
   const currentValue = mode === 'team' ? selectedTeam : selectedAgent
@@ -443,71 +238,6 @@ export default function AppUI() {
       setMessages([])
     }
     toast.success('Session deleted')
-  }
-
-  const handleSubmit = async () => {
-    if (!inputMessage.trim() || isStreaming) return
-
-    const messageContent = inputMessage.trim()
-    setInputMessage('')
-    setIsStreaming(true)
-
-    const userMessage: ChatMessage = {
-      role: 'user',
-      content: messageContent,
-      created_at: Math.floor(Date.now() / 1000)
-    }
-
-    const thinkingMessage: ChatMessage = {
-      role: 'agent',
-      content: '',
-      created_at: Math.floor(Date.now() / 1000) + 1
-    }
-    
-    // Add both messages at once to reduce re-renders
-    setMessages(prev => [...prev, userMessage, thinkingMessage])
-    // Simulate response after delay
-    setTimeout(() => {
-      const responses = [
-        "I understand your question. Let me help you with that.",
-        "That's an interesting problem. Here's what I think...",
-        "I can definitely assist you with this. Let me break it down:",
-        "Great question! Based on my analysis, here's my recommendation:",
-        "I'll help you solve this step by step."
-      ]
-      
-      const randomResponse = responses[Math.floor(Math.random() * responses.length)]
-      
-      const agentResponse: ChatMessage = {
-        role: 'agent',
-        content: randomResponse,
-        created_at: Math.floor(Date.now() / 1000) + 2,
-        tool_calls: Math.random() > 0.5 ? [{
-          role: 'tool' as const,
-          content: 'Tool executed successfully',
-          tool_call_id: `tool-${Date.now()}`,
-          tool_name: 'helper_tool',
-          tool_args: { action: 'analyze' },
-          tool_call_error: false,
-          metrics: { time: 200 },
-          created_at: Math.floor(Date.now() / 1000) + 1
-        }] : undefined
-      }
-
-      setMessages(prev => [...prev.slice(0, -1), agentResponse])
-      setIsStreaming(false)
-      
-      // Create new session if none selected
-      if (!selectedSessionId && hasStorage) {
-        const newSession = {
-          session_id: `session-${Date.now()}`,
-          title: messageContent.slice(0, 50),
-          created_at: Math.floor(Date.now() / 1000)
-        }
-        setSessions(prev => [newSession, ...prev])
-        setSelectedSessionId(newSession.session_id)
-      }
-    }, 2000)
   }
 
   // Sidebar Component
@@ -728,81 +458,6 @@ export default function AppUI() {
       </motion.div>
     </motion.aside>
   )
-
-  // Messages Component
-  const Messages = ({ messages }: { messages: ChatMessage[] }) => {
-    if (messages.length === 0) {
-      return <ChatBlankState />
-    }
-
-    return (
-      <>
-        {messages.map((message, index) => {
-          const key = `${message.role}-${message.created_at}-${index}`
-
-          if (message.role === 'agent') {
-            return <AgentMessageWrapper key={key} message={message} />
-          }
-          return <UserMessage key={key} message={message} />
-        })}
-      </>
-    )
-  }
-
-  // Chat Area Component
-  const ChatArea = () => {
-    const [isAtBottom, setIsAtBottom] = useState(true)
-
-    const scrollToBottom = () => {
-      // Mock scroll to bottom functionality
-      setIsAtBottom(true)
-    }
-
-    return (
-      <main className="relative m-1.5 flex flex-grow flex-col rounded-xl bg-background">
-        <StickToBottom
-          className="relative mb-4 flex max-h-[calc(100vh-64px)] min-h-0 flex-grow flex-col"
-          resize="smooth"
-          initial="smooth"
-        >
-          <StickToBottom.Content className="flex min-h-full flex-col justify-center">
-            <div className="mx-auto w-full max-w-2xl space-y-9 px-4 pb-4">
-              <Messages messages={messages} />
-            </div>
-          </StickToBottom.Content>
-          <ScrollToBottom isAtBottom={isAtBottom} scrollToBottom={scrollToBottom} />
-        </StickToBottom>
-        
-        {/* Chat Input */}
-        <div className="sticky bottom-0 ml-9 px-4 pb-2">
-          <div className="relative mx-auto mb-1 flex w-full max-w-2xl items-end justify-center gap-x-2 font-geist">
-            <TextArea
-              placeholder="Ask anything"
-              value={inputMessage}
-              onChange={(e) => setInputMessage(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && !e.shiftKey && !isStreaming) {
-                  e.preventDefault()
-                  handleSubmit()
-                }
-              }}
-              className="w-full border border-accent bg-primaryAccent px-4 text-sm text-primary focus:border-accent"
-              disabled={!currentValue}
-              ref={chatInputRef}
-            />
-            <Button
-              onClick={handleSubmit}
-              disabled={!currentValue || !inputMessage.trim() || isStreaming}
-              size="icon"
-              className="rounded-xl bg-primary p-5 text-primaryAccent"
-            >
-              <Icon type="send" color="primaryAccent" />
-            </Button>
-          </div>
-        </div>
-      </main>
-    )
-  }
 
   return (
     <div className="flex h-screen bg-background/80">

@@ -13,28 +13,7 @@ import DeleteSessionModal from './DeleteSessionModal'
 import useChatActions from '@/hooks/useChatActions'
 import { truncateText, cn } from '@/lib/utils'
 
-type SessionItemProps = SessionEntry & {
-  isSelected: boolean
-  currentSessionId: string | null
-  onSessionClick: () => void
-}
-const SessionItem = ({
-  title,
-  session_id,
-  isSelected,
-  currentSessionId,
-  onSessionClick
-}: SessionItemProps) => {
-  const [agentId] = useQueryState('agent')
-  const [teamId] = useQueryState('team')
-  const [, setSessionId] = useQueryState('session')
-  const { getSession } = useSessionLoader()
-  const { selectedEndpoint, sessionsData, setSessionsData, mode } =
-    usePlaygroundStore()
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
-  const [isDeleting, setIsDeleting] = useState(false)
-  const { clearChat } = useChatActions()
-
+const SessionItem = () => {
   const handleGetSession = async () => {
     if (!(agentId || teamId)) return
 
@@ -51,20 +30,20 @@ const SessionItem = ({
   }
 
   const handleDeleteSession = async () => {
-    if (!(selectedAgentId || selectedTeamId)) return
+    if (!(agentId || teamId)) return
     setIsDeleting(true)
     try {
       let response
-      if (mode === 'team' && selectedTeamId) {
+      if (mode === 'team' && teamId) {
         response = await deletePlaygroundTeamSessionAPI(
           selectedEndpoint,
-          selectedTeamId,
+          teamId,
           session_id
         )
-      } else if (mode === 'agent' && selectedAgentId) {
+      } else if (mode === 'agent' && agentId) {
         response = await deletePlaygroundSessionAPI(
           selectedEndpoint,
-          selectedAgentId,
+          agentId,
           session_id
         )
       } else {
@@ -75,7 +54,7 @@ const SessionItem = ({
         setSessionsData(sessionsData.filter((s) => s.session_id !== session_id))
         // If the deleted session was the active one, clear the chat
         if (currentSessionId === session_id) {
-          setSelectedSessionId(null)
+          setSessionId(null)
           clearChat()
         }
         toast.success('Session deleted')

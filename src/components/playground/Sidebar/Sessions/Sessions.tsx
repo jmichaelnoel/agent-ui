@@ -1,9 +1,6 @@
-'use client'
-
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
-import { useQueryState } from 'nuqs'
 
 import { usePlaygroundStore } from '@/store'
 import useSessionLoader from '@/hooks/useSessionLoader'

@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=DM+Mono:wght@400&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -6,10 +7,13 @@
   :root {
     --color-border-default: 255, 255, 255, 0.2;
     --scrollbar-width: 0.1rem;
+    --font-geist-sans: 'Geist', sans-serif;
+    --font-dm-mono: 'DM Mono', monospace;
   }
 
   body {
     @apply bg-background/80 text-secondary;
+    font-family: var(--font-geist-sans);
   }
 }
 

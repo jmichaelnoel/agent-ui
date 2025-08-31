@@ -12,15 +12,14 @@ import {
 import { constructEndpointUrl } from '@/lib/constructEndpointUrl'
 import useAIResponseStream from './useAIResponseStream'
 import { ToolCall } from '@/types/playground'
-import { useQueryState } from 'nuqs'
 import { getJsonMarkdown } from '@/lib/utils'
 
 const useAIChatStreamHandler = () => {
   const setMessages = usePlaygroundStore((state) => state.setMessages)
   const { addMessage, focusChatInput } = useChatActions()
-  const [agentId] = useQueryState('agent')
-  const [teamId] = useQueryState('team')
-  const [sessionId, setSessionId] = useQueryState('session')
+  const agentId = 'mock-agent-1'
+  const teamId = 'mock-team-1'
+  const sessionId = null
   const selectedEndpoint = usePlaygroundStore((state) => state.selectedEndpoint)
   const mode = usePlaygroundStore((state) => state.mode)
   const setStreamingErrorMessage = usePlaygroundStore(

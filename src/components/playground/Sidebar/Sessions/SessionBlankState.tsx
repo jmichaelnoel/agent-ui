@@ -103,13 +103,14 @@ const SessionBlankState = () => {
         return (
           <>
             Connect{' '}
-            <Link
+            <a
               className="underline"
               href={'https://docs.agno.com/storage'}
               target="_blank"
+              rel="noopener noreferrer"
             >
               storage
-            </Link>{' '}
+            </a>{' '}
             to your agent to see sessions.{' '}
           </>
         )

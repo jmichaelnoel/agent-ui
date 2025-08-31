@@ -13,12 +13,10 @@ import {
   getPlaygroundStatusAPI,
   getPlaygroundTeamsAPI
 } from '@/api/playground'
-import { useQueryState } from 'nuqs'
 
 const useChatActions = () => {
   const { chatInputRef } = usePlaygroundStore()
   const selectedEndpoint = usePlaygroundStore((state) => state.selectedEndpoint)
-  const [, setSessionId] = useQueryState('session')
   const setMessages = usePlaygroundStore((state) => state.setMessages)
   const setIsEndpointActive = usePlaygroundStore(
     (state) => state.setIsEndpointActive
@@ -34,8 +32,6 @@ const useChatActions = () => {
     (state) => state.setSelectedTeamId
   )
   const setMode = usePlaygroundStore((state) => state.setMode)
-  const [agentId, setAgentId] = useQueryState('agent')
-  const [teamId, setTeamId] = useQueryState('team')
 
   const getStatus = useCallback(async () => {
     try {

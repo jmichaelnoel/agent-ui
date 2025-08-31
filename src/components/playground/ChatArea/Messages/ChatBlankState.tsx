@@ -1,6 +1,3 @@
-'use client'
-
-import Link from 'next/link'
 import { motion, Variants } from 'framer-motion'
 import Icon from '@/components/ui/icon'
 import { IconType } from '@/components/ui/icon/types'
@@ -121,14 +118,14 @@ const ChatBlankState = () => {
               This is an open-source
             </span>
             <span className="inline-flex translate-y-[10px] scale-125 items-center transition-transform duration-200 hover:rotate-6">
-              <Link
+              <a
                 href={EXTERNAL_LINKS.agno}
                 target="_blank"
                 rel="noopener"
                 className="cursor-pointer"
               >
                 <Icon type="agno-tag" size="default" />
-              </Link>
+              </a>
             </span>
             <span className="flex items-center font-[600]">
               Agent UI, built with
@@ -147,7 +144,7 @@ const ChatBlankState = () => {
                     onHoverStart={() => setHoveredIcon(icon.type)}
                     onHoverEnd={() => setHoveredIcon(null)}
                   >
-                    <Link
+                    <a
                       href={icon.link}
                       target="_blank"
                       rel="noopener"
@@ -166,7 +163,7 @@ const ChatBlankState = () => {
                       >
                         {icon.name}
                       </motion.div>
-                    </Link>
+                    </a>
                   </motion.div>
                 ))}
               </div>

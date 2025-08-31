@@ -1,11 +1,9 @@
-'use client'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { TextArea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { usePlaygroundStore } from '@/store'
 import useAIChatStreamHandler from '@/hooks/useAIStreamHandler'
-import { useQueryState } from 'nuqs'
 import Icon from '@/components/ui/icon'
 
 const ChatInput = () => {

@@ -3,8 +3,6 @@ import MarkdownRenderer from '@/components/ui/typography/MarkdownRenderer'
 import { usePlaygroundStore } from '@/store'
 import type { PlaygroundChatMessage } from '@/types/playground'
 import Videos from './Multimedia/Videos'
-import Images from './Multimedia/Images'
-import Audios from './Multimedia/Audios'
 import { memo } from 'react'
 import AgentThinkingLoader from './AgentThinkingLoader'
 

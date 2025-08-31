@@ -37,21 +37,21 @@ const MOCK_TEAMS = [
 ]
 
 const MOCK_SESSIONS = [
-  { session_id: 'session-1', title: 'Data analysis project', created_at: Math.floor(Date.now() / 1000) - 3600 },
-  { session_id: 'session-2', title: 'Code review discussion', created_at: Math.floor(Date.now() / 1000) - 7200 },
-  { session_id: 'session-3', title: 'API integration help', created_at: Math.floor(Date.now() / 1000) - 10800 }
+  { session_id: 'session-1', title: 'Data analysis project', created_at: 1735686000 },
+  { session_id: 'session-2', title: 'Code review discussion', created_at: 1735682400 },
+  { session_id: 'session-3', title: 'API integration help', created_at: 1735678800 }
 ]
 
 const MOCK_MESSAGES = [
   {
     role: 'user' as const,
     content: 'Hello! Can you help me with analyzing some data?',
-    created_at: Math.floor(Date.now() / 1000) - 300
+    created_at: 1735689300
   },
   {
     role: 'agent' as const,
     content: 'Hello! I\'d be happy to help you analyze data. What type of data are you working with?',
-    created_at: Math.floor(Date.now() / 1000) - 280,
+    created_at: 1735689320,
     tool_calls: [
       {
         role: 'tool' as const,
@@ -61,7 +61,7 @@ const MOCK_MESSAGES = [
         tool_args: { type: 'csv' },
         tool_call_error: false,
         metrics: { time: 150 },
-        created_at: Math.floor(Date.now() / 1000) - 285
+        created_at: 1735689315
       }
     ],
     extra_data: {

@@ -14,25 +14,7 @@ import {
   getPlaygroundTeamsAPI
 } from '@/api/playground'
 
-const useChatActions = () => {
-  const { chatInputRef } = usePlaygroundStore()
-  const selectedEndpoint = usePlaygroundStore((state) => state.selectedEndpoint)
-  const setMessages = usePlaygroundStore((state) => state.setMessages)
-  const setIsEndpointActive = usePlaygroundStore(
-    (state) => state.setIsEndpointActive
-  )
-  const setIsEndpointLoading = usePlaygroundStore(
-    (state) => state.setIsEndpointLoading
-  )
-  const setAgents = usePlaygroundStore((state) => state.setAgents)
-  const setTeams = usePlaygroundStore((state) => state.setTeams)
-  const setSelectedModel = usePlaygroundStore((state) => state.setSelectedModel)
-  const setHasStorage = usePlaygroundStore((state) => state.setHasStorage)
-  const setSelectedTeamId = usePlaygroundStore(
-    (state) => state.setSelectedTeamId
-  )
-  const setMode = usePlaygroundStore((state) => state.setMode)
-
+export function useChatActions() {
   const getStatus = useCallback(async () => {
     try {
       const status = await getPlaygroundStatusAPI(selectedEndpoint)
@@ -146,7 +128,8 @@ const useChatActions = () => {
       setSelectedModel('')
       setHasStorage(false)
       setSelectedTeamId(null)
-      setSelectedAgentId(null)
+      setAgentId(null)
+      setTeamId(null)
       setAgents([])
       setTeams([])
     } finally {
@@ -160,14 +143,14 @@ const useChatActions = () => {
     setIsEndpointLoading,
     setAgents,
     setTeams,
-    setSelectedAgentId,
+    setAgentId,
     setSelectedModel,
     setHasStorage,
     setSelectedTeamId,
-    setSelectedSessionId,
     setMode,
-    selectedAgentId,
-    selectedTeamId
+    setTeamId,
+    agentId,
+    teamId
   ])
 
   return {

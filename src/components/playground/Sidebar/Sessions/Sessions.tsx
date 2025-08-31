@@ -2,14 +2,6 @@ import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 
-import { usePlaygroundStore } from '@/store'
-import useSessionLoader from '@/hooks/useSessionLoader'
-
-import SessionItem from './SessionItem'
-import SessionBlankState from './SessionBlankState'
-import { Skeleton } from '@/components/ui/skeleton'
-import { cn } from '@/lib/utils'
-
 dayjs.extend(utc)
 
 const formatDate = (ts: number, style: 'natural' | 'full' = 'full'): string => {

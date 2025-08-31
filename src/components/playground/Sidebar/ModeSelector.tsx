@@ -34,13 +34,12 @@ export function ModeSelector() {
 
     setMode(newMode)
 
-    setAgentId(null)
-    setTeamId(null)
+    setSelectedAgentId(null)
     setSelectedTeamId(null)
     setSelectedModel('')
     setHasStorage(false)
     setMessages([])
-    setSessionId(null)
+    setSelectedSessionId(null)
     clearChat()
   }
 

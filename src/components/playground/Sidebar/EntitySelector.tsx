@@ -11,27 +11,6 @@ import Icon from '@/components/ui/icon'
 import { useEffect } from 'react'
 import useChatActions from '@/hooks/useChatActions'
 
-export function EntitySelector() {
-  const {
-    mode,
-    agents,
-    teams,
-    setMessages,
-    setSelectedModel,
-    setHasStorage,
-    setSelectedTeamId
-  } = usePlaygroundStore()
-  const { focusChatInput } = useChatActions()
-  const [agentId, setAgentId] = useQueryState('agent', {
-    parse: (value) => value || undefined,
-    history: 'push'
-  })
-  const [teamId, setTeamId] = useQueryState('team', {
-    parse: (value) => value || undefined,
-    history: 'push'
-  })
-  const [, setSessionId] = useQueryState('session')
-
   const currentEntities = mode === 'team' ? teams : agents
   const currentValue = mode === 'team' ? teamId : agentId
   const placeholder = mode === 'team' ? 'Select Team' : 'Select Agent'
@@ -64,16 +43,14 @@ export function EntitySelector() {
 
     if (mode === 'team') {
       setSelectedTeamId(newValue)
-      setTeamId(newValue)
-      setAgentId(null)
+      setSelectedAgentId(null)
     } else {
       setSelectedTeamId(null)
-      setAgentId(newValue)
-      setTeamId(null)
+      setSelectedAgentId(newValue)
     }
 
     setMessages([])
-    setSessionId(null)
+    setSelectedSessionId(null)
 
     if (selectedEntity?.model.provider) {
       focusChatInput()

@@ -146,8 +146,7 @@ const useChatActions = () => {
       setSelectedModel('')
       setHasStorage(false)
       setSelectedTeamId(null)
-      setAgentId(null)
-      setTeamId(null)
+      setSelectedAgentId(null)
       setAgents([])
       setTeams([])
     } finally {
@@ -161,14 +160,14 @@ const useChatActions = () => {
     setIsEndpointLoading,
     setAgents,
     setTeams,
-    setAgentId,
+    setSelectedAgentId,
     setSelectedModel,
     setHasStorage,
     setSelectedTeamId,
+    setSelectedSessionId,
     setMode,
-    setTeamId,
-    agentId,
-    teamId
+    selectedAgentId,
+    selectedTeamId
   ])
 
   return {

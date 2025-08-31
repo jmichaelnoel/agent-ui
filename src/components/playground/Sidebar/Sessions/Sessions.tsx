@@ -113,8 +113,8 @@ const Sessions = () => {
   ])
 
   useEffect(() => {
-    if (sessionId) setSelectedSessionId(sessionId)
-  }, [sessionId])
+    if (selectedSessionId) setSelectedSessionId(selectedSessionId)
+  }, [selectedSessionId, setSelectedSessionId])
 
   const formattedSessions = useMemo(() => {
     if (!Array.isArray(sessionsData)) return []

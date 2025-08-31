@@ -177,10 +177,10 @@ const useAIChatStreamHandler = () => {
               chunk.event === RunEvent.TeamReasoningStarted
             ) {
               newSessionId = chunk.session_id as string
-              setSessionId(chunk.session_id as string)
+              setSelectedSessionId(chunk.session_id as string)
               if (
                 hasStorage &&
-                (!sessionId || sessionId !== chunk.session_id) &&
+                (!selectedSessionId || selectedSessionId !== chunk.session_id) &&
                 chunk.session_id
               ) {
                 const sessionData = {

@@ -51,20 +51,20 @@ const SessionItem = ({
   }
 
   const handleDeleteSession = async () => {
-    if (!(agentId || teamId)) return
+    if (!(selectedAgentId || selectedTeamId)) return
     setIsDeleting(true)
     try {
       let response
-      if (mode === 'team' && teamId) {
+      if (mode === 'team' && selectedTeamId) {
         response = await deletePlaygroundTeamSessionAPI(
           selectedEndpoint,
-          teamId,
+          selectedTeamId,
           session_id
         )
-      } else if (mode === 'agent' && agentId) {
+      } else if (mode === 'agent' && selectedAgentId) {
         response = await deletePlaygroundSessionAPI(
           selectedEndpoint,
-          agentId,
+          selectedAgentId,
           session_id
         )
       } else {
@@ -75,7 +75,7 @@ const SessionItem = ({
         setSessionsData(sessionsData.filter((s) => s.session_id !== session_id))
         // If the deleted session was the active one, clear the chat
         if (currentSessionId === session_id) {
-          setSessionId(null)
+          setSelectedSessionId(null)
           clearChat()
         }
         toast.success('Session deleted')

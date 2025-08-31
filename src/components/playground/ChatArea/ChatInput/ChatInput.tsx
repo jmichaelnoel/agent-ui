@@ -5,6 +5,13 @@ import { Button } from '@/components/ui/button'
 import { usePlaygroundStore } from '@/store'
 import useAIChatStreamHandler from '@/hooks/useAIStreamHandler'
 import Icon from '@/components/ui/icon'
+
+const ChatInput = () => {
+  const [inputMessage, setInputMessage] = useState('')
+  const { selectedAgent, teamId, isStreaming } = usePlaygroundStore()
+  const { handleStreamResponse } = useAIChatStreamHandler()
+  const chatInputRef = useState(null)
+
   const handleSubmit = async () => {
     if (!inputMessage.trim()) return
 
@@ -40,13 +47,13 @@ import Icon from '@/components/ui/icon'
           }
         }}
         className="w-full border border-accent bg-primaryAccent px-4 text-sm text-primary focus:border-accent"
-        disabled={!isEntitySelected}
+        disabled={!(selectedAgent || teamId)}
         ref={chatInputRef}
       />
       <Button
         onClick={handleSubmit}
         disabled={
-          !isEntitySelected || !inputMessage.trim() || isStreaming
+          !(selectedAgent || teamId) || !inputMessage.trim() || isStreaming
         }
         size="icon"
         className="rounded-xl bg-primary p-5 text-primaryAccent"

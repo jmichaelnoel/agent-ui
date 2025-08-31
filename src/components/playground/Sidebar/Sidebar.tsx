@@ -286,7 +286,7 @@ const Sidebar = () => {
                     <>
                       <ModeSelector />
                       <EntitySelector />
-                      {selectedModel && (agentId || teamId) && (
+                      {selectedModel && (selectedAgentId || selectedTeamId) && (
                         <ModelDisplay model={selectedModel} />
                       )}
                     </>

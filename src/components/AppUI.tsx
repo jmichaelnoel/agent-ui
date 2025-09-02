@@ -16,7 +16,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { toast } from 'sonner'
 import Tooltip from '@/components/ui/tooltip'
 import DeleteSessionModal from '@/components/playground/Sidebar/Sessions/DeleteSessionModal'
-import { ChatArea } from '@/components/playground/ChatArea'</parameter>
+import { ChatArea } from '@/components/playground/ChatArea'
 
 // Mock Data
 const MOCK_AGENTS = [

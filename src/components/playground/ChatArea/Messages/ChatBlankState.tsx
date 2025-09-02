@@ -47,13 +47,14 @@ const ActionButton = ({ href, variant, text }: ActionButtonProps) => {
   }
 
   return (
-    <Link
+    <a
       href={href}
       target="_blank"
+      rel="noopener noreferrer"
       className={`${baseStyles} ${variant ? variantStyles[variant] : ''}`}
     >
       {text}
-    </Link>
+    </a>
   )
 }
 

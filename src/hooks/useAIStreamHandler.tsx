@@ -16,10 +16,11 @@ import { getJsonMarkdown } from '@/lib/utils'
 
 const useAIChatStreamHandler = () => {
   const setMessages = usePlaygroundStore((state) => state.setMessages)
+  const selectedAgentId = usePlaygroundStore((state) => state.selectedAgentId)
+  const selectedTeamId = usePlaygroundStore((state) => state.selectedTeamId)
+  const selectedSessionId = usePlaygroundStore((state) => state.selectedSessionId)
+  const setSelectedSessionId = usePlaygroundStore((state) => state.setSelectedSessionId)
   const { addMessage, focusChatInput } = useChatActions()
-  const agentId = 'mock-agent-1'
-  const teamId = 'mock-team-1'
-  const sessionId = null
   const selectedEndpoint = usePlaygroundStore((state) => state.selectedEndpoint)
   const mode = usePlaygroundStore((state) => state.mode)
   const setStreamingErrorMessage = usePlaygroundStore(
@@ -141,18 +142,18 @@ const useAIChatStreamHandler = () => {
       })
 
       let lastContent = ''
-      let newSessionId = sessionId
+      let newSessionId = selectedSessionId
       try {
         const endpointUrl = constructEndpointUrl(selectedEndpoint)
 
         let playgroundRunUrl: string | null = null
 
-        if (mode === 'team' && teamId) {
-          playgroundRunUrl = APIRoutes.TeamRun(endpointUrl, teamId)
-        } else if (mode === 'agent' && agentId) {
+        if (mode === 'team' && selectedTeamId) {
+          playgroundRunUrl = APIRoutes.TeamRun(endpointUrl, selectedTeamId)
+        } else if (mode === 'agent' && selectedAgentId) {
           playgroundRunUrl = APIRoutes.AgentRun(endpointUrl).replace(
             '{agent_id}',
-            agentId
+            selectedAgentId
           )
         }
 
@@ -164,7 +165,7 @@ const useAIChatStreamHandler = () => {
         }
 
         formData.append('stream', 'true')
-        formData.append('session_id', sessionId ?? '')
+        formData.append('session_id', selectedSessionId ?? '')
 
         await streamResponse({
           apiUrl: playgroundRunUrl,
@@ -177,10 +178,10 @@ const useAIChatStreamHandler = () => {
               chunk.event === RunEvent.TeamReasoningStarted
             ) {
               newSessionId = chunk.session_id as string
-              setSessionId(chunk.session_id as string)
+              setSelectedSessionId(chunk.session_id as string)
               if (
                 hasStorage &&
-                (!sessionId || sessionId !== chunk.session_id) &&
+                (!selectedSessionId || selectedSessionId !== chunk.session_id) &&
                 chunk.session_id
               ) {
                 const sessionData = {
@@ -438,8 +439,6 @@ const useAIChatStreamHandler = () => {
       setIsStreaming,
       focusChatInput,
       setSessionsData,
-      selectedSessionId,
-      setSelectedSessionId,
       hasStorage,
       processChunkToolCalls
     ]

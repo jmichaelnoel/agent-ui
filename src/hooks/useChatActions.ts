@@ -15,6 +15,22 @@ import {
 } from '@/api/playground'
 
 export function useChatActions() {
+  const selectedEndpoint = usePlaygroundStore((state) => state.selectedEndpoint)
+  const setMessages = usePlaygroundStore((state) => state.setMessages)
+  const setSessionId = usePlaygroundStore((state) => state.setSelectedSessionId)
+  const chatInputRef = usePlaygroundStore((state) => state.chatInputRef)
+  const setAgents = usePlaygroundStore((state) => state.setAgents)
+  const setTeams = usePlaygroundStore((state) => state.setTeams)
+  const setSelectedAgentId = usePlaygroundStore((state) => state.setSelectedAgentId)
+  const setSelectedModel = usePlaygroundStore((state) => state.setSelectedModel)
+  const setHasStorage = usePlaygroundStore((state) => state.setHasStorage)
+  const setSelectedTeamId = usePlaygroundStore((state) => state.setSelectedTeamId)
+  const setMode = usePlaygroundStore((state) => state.setMode)
+  const selectedAgentId = usePlaygroundStore((state) => state.selectedAgentId)
+  const selectedTeamId = usePlaygroundStore((state) => state.selectedTeamId)
+  const setIsEndpointActive = usePlaygroundStore((state) => state.setIsEndpointActive)
+  const setIsEndpointLoading = usePlaygroundStore((state) => state.setIsEndpointLoading)
+
   const getStatus = useCallback(async () => {
     try {
       const status = await getPlaygroundStatusAPI(selectedEndpoint)
@@ -80,13 +96,13 @@ export function useChatActions() {
 
           if (currentMode === 'team' && teams.length > 0) {
             const firstTeam = teams[0]
-            setTeamId(firstTeam.value)
+            setSelectedTeamId(firstTeam.value)
             setSelectedTeamId(firstTeam.value)
             setSelectedModel(firstTeam.model.provider || '')
             setHasStorage(!!firstTeam.storage)
           } else if (currentMode === 'agent' && agents.length > 0) {
             const firstAgent = agents[0]
-            setAgentId(firstAgent.value)
+            setSelectedAgentId(firstAgent.value)
             setSelectedModel(firstAgent.model.provider || '')
             setHasStorage(!!firstAgent.storage)
             setSelectedTeamId(null)
@@ -95,14 +111,14 @@ export function useChatActions() {
               // Prioritize team mode when teams are available
               setMode('team')
               const firstTeam = teams[0]
-              setTeamId(firstTeam.value)
+              setSelectedTeamId(firstTeam.value)
               setSelectedTeamId(firstTeam.value)
               setSelectedModel(firstTeam.model.provider || '')
               setHasStorage(!!firstTeam.storage)
             } else if (agents.length > 0) {
               setMode('agent')
               const firstAgent = agents[0]
-              setAgentId(firstAgent.value)
+              setSelectedAgentId(firstAgent.value)
               setSelectedModel(firstAgent.model.provider || '')
               setHasStorage(!!firstAgent.storage)
               setSelectedTeamId(null)
@@ -115,8 +131,8 @@ export function useChatActions() {
         setSelectedModel('')
         setHasStorage(false)
         setSelectedTeamId(null)
-        setAgentId(null)
-        setTeamId(null)
+        setSelectedAgentId(null)
+        setSelectedTeamId(null)
       }
       setAgents(agents)
       setTeams(teams)
@@ -128,8 +144,8 @@ export function useChatActions() {
       setSelectedModel('')
       setHasStorage(false)
       setSelectedTeamId(null)
-      setAgentId(null)
-      setTeamId(null)
+      setSelectedAgentId(null)
+      setSelectedTeamId(null)
       setAgents([])
       setTeams([])
     } finally {
@@ -143,14 +159,13 @@ export function useChatActions() {
     setIsEndpointLoading,
     setAgents,
     setTeams,
-    setAgentId,
+    setSelectedAgentId,
     setSelectedModel,
     setHasStorage,
     setSelectedTeamId,
     setMode,
-    setTeamId,
-    agentId,
-    teamId
+    selectedAgentId,
+    selectedTeamId
   ])
 
   return {
